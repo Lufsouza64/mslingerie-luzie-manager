@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luzie Manager - Marina</title>
+    <!-- Fonte elegante -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --rosa-claro: #fce4ec;
+            --rosa-medio: #f8bbd0;
+            --dourado: #d4af37;
+            --creme: #fffdf8;
+            --texto-escuro: #4a3b42;
+            --vermelho-alerta: #e57373;
+            --verde-sucesso: #81c784;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: var(--creme);
+            color: var(--texto-escuro);
+            padding-bottom: 70px; /* Espaço para o menu inferior */
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--rosa-claro), var(--rosa-medio));
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--dourado);
+        }
+
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--texto-escuro);
+            font-size: 24px;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            font-size: 12px;
+            color: var(--dourado);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* Conteúdo Principal */
+        main {
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .tela {
+            display: none;
+        }
+
+        .tela.ativa {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--dourado);
+        }
+
+        .card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--rosa-medio);
+            padding-bottom: 5px;
+        }
+
+        /* Formulários */
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--dourado);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #b5952f;
+        }
+
+        .btn-whatsapp {
+            background-color: #25D366;
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-whatsapp:hover {
+            background-color: #1ebe5d;
+        }
+
+        /* Resultados da Calculadora */
+        .resultado-box {
+            background-color: var(--rosa-claro);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .resultado-box p {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .resultado-box strong {
+            color: var(--texto-escuro);
+        }
+
+        .destaque-pix {
+            color: #2e7d32;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .destaque-cartao {
+            color: var(--vermelho-alerta);
+            font-weight: bold;
+        }
+
+        /* Menu Inferior */
+        nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            border-top: 2px solid var(--rosa-medio);
+        }
+
+        nav button {
+            background: none;
+            color: var(--texto-escuro);
+            border: none;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: auto;
+            padding: 5px;
+        }
+
+        nav button.ativo {
+            color: var(--dourado);
+            font-weight: bold;
+        }
+
+        nav button i {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        /* Ícones (Simulação com Emojis) */
+        .icon { font-size: 20px; margin-bottom: 4px; display: block; }
+
+        /* Financeiro Cards */
+        .caixa-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .caixa-valor {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--dourado);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>LUZIE Manager</h1>
+        <p>Área Exclusiva - Marina</p>
+    </header>
+
+    <main>
+        <!-- TELA 1: DASHBOARD -->
+        <section id="tela-dashboard" class="tela ativa">
+            <div class="card">
+                <h2>Resumo Financeiro</h2>
+                <div class="caixa-grid">
+                    <div style="background: #f0f4c3; padding: 10px; border-radius: 8px; text-align: center;">
+                        <span style="font-size: 12px;">Caixa Reposição</span>
+                        <div class="caixa-valor" id="caixa-reposicao">R$ 0,00</div>
+                    </div>
+                    <div style="background: #e8f5e9; padding: 10px; border-radius: 8px; text-align: center;">
+                        <span style="font-size: 12px;">Lucro (Salário)</span>
+                        <div class="caixa-valor" id="caixa-lucro">R$ 0,00</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="border-left-color: var(--vermelho-alerta);">
+                <h2>🚨 Guerra ao Fiado (Acertos)</h2>
+                <p style="font-size: 13px; margin-bottom: 10px;">Clientes com pagamentos pendentes:</p>
+                
+                <div style="background: #ffebee; padding: 10px; border-radius: 8px; margin-bottom: 10px;">
+                    <strong>Maria Silva</strong><br>
+                    <span style="font-size: 12px; color: #d32f2f;">Venceu ontem - R$ 150,00</span>
+                    <button class="btn-whatsapp" onclick="enviarWhatsApp('Maria', '150,00', 'ontem')">
+                        Enviar Lembrete no WhatsApp
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TELA 2: PRECIFICAÇÃO -->
+        <section id="tela-precificacao" class="tela">
+            <div class="card">
+                <h2>Calculadora de Margem</h2>
+                
+                <label>Custo da Peça (R$):</label>
+                <input type="number" id="custo-peca" placeholder="Ex: 30.00">
+                
+                <label>Frete/Embalagem (R$):</label>
+                <input type="number" id="custo-extra" placeholder="Ex: 5.00">
+                
+                <label>Margem Desejada (%):</label>
+                <input type="number" id="margem-desejada" value="150">
+                
+                <button onclick="calcularPreco()">Calcular Preço de Venda</button>
+
+                <div class="resultado-box" id="resultado-preco">
+                    <p>Preço Base (Custo + Margem): <strong id="res-base">R$ 0,00</strong></p>
+                    <hr style="margin: 10px 0; border: 0; border-top: 1px solid #ddd;">
+                    <p>💳 Venda no Cartão (Taxa 4,99% inclusa):</p>
+                    <p class="destaque-cartao" id="res-cartao">R$ 0,00</p>
+                    <p style="margin-top: 10px;">💠 Venda no Pix (5% de desconto):</p>
+                    <p class="destaque-pix" id="res-pix">R$ 0,00</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- TELA 3: VENDER (SIMULAÇÃO) -->
+        <section id="tela-venda" class="tela">
+            <div class="card">
+                <h2>Registrar Venda (Baixa de Estoque)</h2>
+                <label>Nome do Produto:</label>
+                <input type="text" id="venda-produto" placeholder="Ex: Colar Dourado">
+                
+                <label>Custo do Produto (Para repor):</label>
+                <input type="number" id="venda-custo" placeholder="Ex: 30.00">
+                
+                <label>Valor Vendido:</label>
+                <input type="number" id="venda-valor" placeholder="Ex: 100.00">
+                
+                <button onclick="registrarVenda()" style="background-color: var(--verde-sucesso);">Registrar Venda e Separar Dinheiro</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- MENU INFERIOR -->
+    <nav>
+        <button class="ativo" onclick="mudarTela('dashboard', this)">
+            <span class="icon">📊</span>
+            Painel
+        </button>
+        <button onclick="mudarTela('precificacao', this)">
+            <span class="icon">🧮</span>
+            Precificar
+        </button>
+        <button onclick="mudarTela('venda', this)">
+            <span class="icon">💰</span>
+            Vender
+        </button>
+    </nav>
+
+    <script>
+        // Variáveis de Saldo (Simulando um banco de dados local)
+        let saldoReposicao = 0;
+        let saldoLucro = 0;
+
+        // Navegação entre as telas
+        function mudarTela(idTela, botaoClicado) {
+            // Esconde todas as telas
+            document.querySelectorAll('.tela').forEach(tela => {
+                tela.classList.remove('ativa');
+            });
+            // Mostra a tela selecionada
+            document.getElementById('tela-' + idTela).classList.add('ativa');
+
+            // Atualiza o menu
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('ativo');
+            });
+            botaoClicado.classList.add('ativo');
+        }
+
+        // Lógica da Calculadora de Precificação
+        function calcularPreco() {
+            const custo = parseFloat(document.getElementById('custo-peca').value) || 0;
+            const extra = parseFloat(document.getElementById('custo-extra').value) || 0;
+            const margem = parseFloat(document.getElementById('margem-desejada').value) || 0;
+
+            const custoTotal = custo + extra;
+            const valorLucro = custoTotal * (margem / 100);
+            const precoBase = custoTotal + valorLucro;
+
+            // Taxa do cartão (4,99%)
+            const taxaCartao = 0.0499;
+            const precoCartao = precoBase / (1 - taxaCartao);
+
+            // Desconto no Pix (5%)
+            const descontoPix = 0.05;
+            const precoPix = precoBase * (1 - descontoPix);
+
+            // Exibir resultados
+            document.getElementById('res-base').innerText = `R$ ${precoBase.toFixed(2)}`;
+            document.getElementById('res-cartao').innerText = `R$ ${precoCartao.toFixed(2)}`;
+            document.getElementById('res-pix').innerText = `R$ ${precoPix.toFixed(2)}`;
+
+            document.getElementById('resultado-preco').style.display = 'block';
+        }
+
+        // Lógica de Separar Dinheiro (Guerra ao Fiado / Caixa)
+        function registrarVenda() {
+            const custo = parseFloat(document.getElementById('venda-custo').value) || 0;
+            const valorVendido = parseFloat(document.getElementById('venda-valor').value) || 0;
+
+            if (custo === 0 || valorVendido === 0) {
+                alert("Por favor, preencha todos os campos.");
+                return;
+            }
+
+            if (valorVendido < custo) {
+                alert("Atenção: Você está vendendo com prejuízo!");
+            }
+
+            // Separação do Dinheiro (Item 4 do seu negócio)
+            const lucroReal = valorVendido - custo;
+            
+            saldoReposicao += custo; // Garante o dinheiro da próxima compra
+            saldoLucro += lucroReal; // O que sobra é o lucro (salário da Marina)
+
+            // Atualiza o painel (Dashboard)
+            document.getElementById('caixa-reposicao').innerText = `R$ ${saldoReposicao.toFixed(2)}`;
+            document.getElementById('caixa-lucro').innerText = `R$ ${saldoLucro.toFixed(2)}`;
+
+            alert(`Venda registrada!\n\nR$ ${custo.toFixed(2)} guardados para Reposição.\nR$ ${lucroReal.toFixed(2)} de Lucro livre.`);
+
+            // Limpa os campos
+            document.getElementById('venda-produto').value = '';
+            document.getElementById('venda-custo').value = '';
+            document.getElementById('venda-valor').value = '';
+
+            // Volta para o painel
+            mudarTela('dashboard', document.querySelector('nav button'));
+        }
+
+        // Função para abrir o WhatsApp com a mensagem pronta
+        function enviarWhatsApp(nome, valor, data) {
+            // Substitua o número abaixo pelo número da Marina (com 55 e DDD)
+            const meuNumero = "5511999999999"; 
+            
+            const mensagem = `Olá, ${nome}! Tudo bem? 💖 Passando para lembrar que o vencimento do seu acerto está marcado para ${data}. O valor é de R$ ${valor}. Para sua comodidade, aceito Pix (com desconto) ou Cartão. Qualquer dúvida estou à disposição! Beijos, Marina.`;
+            
+            const url = `https://wa.me/${meuNumero}?text=${encodeURIComponent(mensagem)}`;
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>
